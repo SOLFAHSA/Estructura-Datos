@@ -16,23 +16,37 @@ export class EscritorioService {
     }
 
     public getAll() {
-        this.db.all('select * from escritorio', (error, escritorios) => {
 
-            if ( error ) {  
-                console.error('errores: ', error);
-                return;
-            }
+        return new Promise( (resolve, reject) => {
 
-            console.log('registros', escritorios);
-            return escritorios;
-        });
+            this.db.all('select * from escritorio', (error, escritorios) => {
+    
+                if ( error ) {  
+                    reject(error);
+                }
+
+                resolve(escritorios);
+            });
+        })
+
     }
 
     public add( escritorio: Escritorio ) {
 
-        if ( escritorio ) {
+        return new Promise((resolve,reject) => {
 
-        }
+            if ( escritorio ) {
+
+            let stm = this.db.prepare('insert into escritorio VALUES(?,?,?)');
+                    
+            stm.run({...escritorio}, )
+            
+            
+            } else { 
+                reject({ ok: false, status: 400, error: 'Se recibio un valor NULL' });
+            }
+
+        });
 
     }
 
