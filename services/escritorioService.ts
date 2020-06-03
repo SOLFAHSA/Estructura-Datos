@@ -37,10 +37,15 @@ export class EscritorioService {
 
             if ( escritorio ) {
 
-            let stm = this.db.prepare('insert into escritorio VALUES(?,?,?)');
-                    
-            stm.run({...escritorio}, )
-            
+            let stm: any = this.db.prepare('insert into escritorio VALUES(?,?,?)')
+                      .run([escritorio.numero, escritorio.descripcion, escritorio.tipo], (err) => {
+                        
+                        if (err) {
+                            reject({error: err.message});
+                        }
+                        resolve(stm);
+
+                    });                
             
             } else { 
                 reject({ ok: false, status: 400, error: 'Se recibio un valor NULL' });
@@ -49,6 +54,20 @@ export class EscritorioService {
         });
 
     }
+
+    public delete( id: number ) {
+        return new Promise((resolve, reject) => {
+
+            let stmt: any = this.db.prepare('Delete from escritorio where rowid=?')
+                            .run(id, (err) => {
+                if (err)
+                    reject({error: err.message});
+                else 
+                    resolve(stmt);
+            });
+
+        });
+    } 
 
 
 }

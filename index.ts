@@ -5,6 +5,7 @@ import  ROUTER  from './routes/router';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { EscritorioService } from './services/escritorioService';
+import { Escritorio } from './classes/escritorio';
 
 const SERVER = Server.instance;
 const ES = EscritorioService.instance;
@@ -21,5 +22,4 @@ SERVER.app.use('/', ROUTER);
 
 SERVER.start( () => {
     console.log(`Servidor corriendo en el puerto: ${ SERVER.port }`);
-    ES.getAll();
 });
