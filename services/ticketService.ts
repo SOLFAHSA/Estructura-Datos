@@ -44,7 +44,7 @@ export class TicketService {
 
                 resolve(ticket);
             });
-        })
+        });
 
     }
 
@@ -55,7 +55,7 @@ export class TicketService {
             if ( ticket ) {
 
             let stm: any = this.db.prepare('insert into ticket VALUES(?,?,?)')
-                      .run([ticket.numero, ticket.clienteID, ticket.status], ( err ) => {
+                      .run([ticket.numero, ticket.clienteID, 0], ( err ) => {
                         
                         if (err) {
                             reject({error: err.message});
@@ -117,6 +117,40 @@ export class TicketService {
 
         });
     } 
+
+    public despacharTicket() {
+
+        return new Promise( (resolve, reject) => {
+
+            this.db.get(`select min(*) from ticket where status = 0`, (error, ticket) => {
+    
+                if ( error ) {  
+                    reject(error);
+                }
+
+                resolve(ticket);
+            });
+        })
+
+    }
+
+    nuevoTicket() {
+
+        return new Promise((resolve, reject) =>{
+
+            this.db.all('select max(*) from ticket where status=0', (err, tickets: Array<any>) => {
+                
+                if ( err )
+                    reject({error: err.message });
+                
+                if( tickets.length === 0 )
+                    resolve({numero: 1});
+                else
+                    resolve({numero: (tickets[0].numero + 1)})
+
+            });
+        });
+    }
 
 
 }
