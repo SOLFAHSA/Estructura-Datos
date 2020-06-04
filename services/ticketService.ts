@@ -83,11 +83,10 @@ export class TicketService {
                 stmt = this.db.prepare(
                     `UPDATE ticket
                       SET
-                        numero = ${ ticket.numero },
                         clienteId = ${ ticket.clienteID },
                         status = ${ ticket.status }
                       where
-                        numero = ${ ticket.id };`
+                        numero = ${ ticket.numero };`
                 ).run((err) => {
 
                     if( err )
@@ -98,7 +97,6 @@ export class TicketService {
 
             }
 
-            reject({error: 'error'})
         });
 
     }
@@ -107,7 +105,7 @@ export class TicketService {
     public delete( id: number ) {
         return new Promise((resolve, reject) => {
 
-            let stmt: any = this.db.prepare('Delete from ticket where id=?')
+            let stmt: any = this.db.prepare('Delete from ticket where numero=?')
                             .run(id, (err) => {
                 if ( err )
                     reject({error: err.message});
@@ -122,13 +120,13 @@ export class TicketService {
 
         return new Promise( (resolve, reject) => {
 
-            this.db.get(`select min(*) from ticket where status = 0`, (error, ticket) => {
+            this.db.get('select min(numero) as numero, clienteID, status from ticket where status = 0', (error, ticket) => {
     
                 if ( error ) {  
                     reject(error);
                 }
 
-                resolve(ticket);
+                resolve(ticket;
             });
         })
 
@@ -138,16 +136,20 @@ export class TicketService {
 
         return new Promise((resolve, reject) =>{
 
-            this.db.all('select max(*) from ticket where status=0', (err, tickets: Array<any>) => {
-                
-                if ( err )
-                    reject({error: err.message });
-                
-                if( tickets.length === 0 )
-                    resolve({numero: 1});
-                else
-                    resolve({numero: (tickets[0].numero + 1)})
 
+
+            this.db.get('SELECT max(numero) as numero FROM ticket t;', (err, result) => {
+                
+                if ( err ) {
+                    reject(err.message);
+                }
+
+                if( result.numero === null ) {
+                    resolve(1);
+                }
+                else {
+                    resolve((result.numero + 1));
+                }
             });
         });
     }

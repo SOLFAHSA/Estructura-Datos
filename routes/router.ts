@@ -2,8 +2,11 @@
 
 import { Router, Request, Response } from 'express';
 import Server from '../classes/server';
+import { TicketService } from '../services/ticketService';
+import { Ticket } from '../classes/ticket';
 
 const ROUTER = Router();
+const ticketService = TicketService.instance;
 
 ROUTER.get('/mensajes', ( req: Request, res: Response ) => {
 
@@ -63,6 +66,52 @@ ROUTER.post('/mensajes/:id', ( req: Request, res: Response ) => {
 
 
 });
+
+ROUTER.post('/tickets/new', ( req: Request, res: Response ) => {
+    
+    const SERVER = Server.instance;
+    
+    let ticket: any = req.body;
+
+    ticketService.nuevoTicket()
+        .then(result => {
+            const NUM = result as number;
+            let newTicket = new Ticket(NUM);
+            newTicket.clienteID = ticket.clienteID;
+            
+            ticketService.add(newTicket)
+            .then( result => {
+                console.log(result);
+                res.json({
+                    ok: true,
+                    ticket: result
+                });
+            });
+        });
+});
+
+ROUTER.post('/tickets/closed', ( req: Request, res: Response ) => {
+    
+    const SERVER = Server.instance;
+    
+    ticketService.despacharTicket()
+        .then(result => {
+            let ticketUpd: Ticket = {...result};
+            ticketUpd.status = 1;
+            ticketService.update(ticketUpd)
+            .then( result => {
+                console.log(result);
+                res.json({
+                    ok: true,
+                    ticket: ticketUpd
+                });
+            });
+        });
+      
+
+
+});
+
 
 
 export default ROUTER;
