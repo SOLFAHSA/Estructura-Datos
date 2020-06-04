@@ -126,7 +126,7 @@ export class TicketService {
                     reject(error);
                 }
 
-                resolve(ticket;
+                resolve(ticket);
             });
         })
 
