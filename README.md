@@ -23,3 +23,12 @@ Ejecutar:
 nodemon dist/
 ```
 
+##Crear nuevo ticket
+```
+localhost:7200/tickets/new \*   **Agregar en el body; clienteID: ''## *\
+```
+
+##Despachar ticket
+```
+localhost:7200/tickets/closed
+```
