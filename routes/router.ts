@@ -96,7 +96,7 @@ ROUTER.post('/tickets/closed', ( req: Request, res: Response ) => {
     
     ticketService.despacharTicket()
         .then(result => {
-            let ticketUpd: Ticket = {...result};
+            let ticketUpd: Ticket = result as Ticket;
             ticketUpd.status = 1;
             ticketService.update(ticketUpd)
             .then( result => {
