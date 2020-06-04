@@ -1,7 +1,7 @@
 
 
 
-export class ticket {
+export class Ticket {
 
     public numero: number;
     public clienteID: string;
