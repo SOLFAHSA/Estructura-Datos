@@ -4,9 +4,12 @@ import { Router, Request, Response } from 'express';
 import Server from '../classes/server';
 import { TicketService } from '../services/ticketService';
 import { Ticket } from '../classes/ticket';
+import { EscritorioService } from '../services/escritorioService';
+import { Escritorio } from '../classes/escritorio';
 
 const ROUTER = Router();
 const ticketService = TicketService.instance;
+const escritorioService = EscritorioService.instance;
 
 ROUTER.get('/mensajes', ( req: Request, res: Response ) => {
 
@@ -110,6 +113,26 @@ ROUTER.post('/tickets/closed', ( req: Request, res: Response ) => {
       
 
 
+});
+
+
+ROUTER.post('/escritorio/new', ( req: Request, res: Response ) => {
+    
+    const SERVER = Server.instance;
+    
+    let escritorio = new Escritorio(req.body.numero);
+    escritorio.descripcion = req.body.descripcion || '';
+    escritorio.tipo = req.body.tipo || '';
+
+
+    escritorioService.add(escritorio)
+        .then( result => {
+                console.log(result);
+                res.json({
+                    ok: true,
+                    value: result
+                });
+            });
 });
 
 

@@ -56,10 +56,12 @@ export class EscritorioService {
             let stm: any = this.db.prepare('insert into escritorio VALUES(?,?,?)')
                       .run([escritorio.numero, escritorio.descripcion, escritorio.tipo], (err) => {
                         
-                        if (err) {
-                            reject({error: err.message});
+                        if (err)
+                        {
+                            console.error(err.message)
                         }
-                        resolve(stm);
+
+                          resolve(stm);
 
                     });                
             
