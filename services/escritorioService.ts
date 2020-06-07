@@ -58,7 +58,7 @@ export class EscritorioService {
                         
                         if (err)
                         {
-                            console.error(err.message)
+                            console.error(err.message);
                         }
 
                           resolve(stm);

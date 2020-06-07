@@ -75,26 +75,23 @@ export class TicketService {
     public update( ticket: Ticket ) {
 
         return new Promise((resolve, reject) => {
-
+            console.log(ticket);
             if ( ticket ) {
 
                 let stmt: any;
 
                 stmt = this.db.prepare(
-                    `UPDATE ticket
-                      SET
-                        clienteId = ${ ticket.clienteID },
-                        status = ${ ticket.status }
-                      where
-                        numero = ${ ticket.numero };`
-                ).run((err) => {
+                    `UPDATE ticket SET status = ${ ticket.status } where numero = ${ ticket.numero }`
+                ).run([], (err) => {
 
-                    if( err )
+                    if( err ){
                         reject(err);
-                    else
+                    } else {   
                         resolve(stmt);
+                    }
                 });
 
+                
             }
 
         });
@@ -120,12 +117,13 @@ export class TicketService {
 
         return new Promise( (resolve, reject) => {
 
-            this.db.get('select min(numero) as numero, clienteID, status from ticket where status = 0', (error, ticket) => {
+            this.db.get('select min(numero) as numero, clienteID, status from ticket where status = 0', 
+            (err, ticket) => {
     
-                if ( error ) {  
-                    reject(error);
+                if ( err ) {  
+                    console.error(err.message);
                 }
-
+                console.log(ticket);
                 resolve(ticket);
             });
         })

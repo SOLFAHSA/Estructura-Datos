@@ -96,14 +96,23 @@ ROUTER.post('/tickets/new', ( req: Request, res: Response ) => {
 ROUTER.post('/tickets/closed', ( req: Request, res: Response ) => {
     
     const SERVER = Server.instance;
-    
+    const escritorio = req.body.escritorio;
+
+
     ticketService.despacharTicket()
         .then(result => {
             let ticketUpd: Ticket = result as Ticket;
             ticketUpd.status = 1;
             ticketService.update(ticketUpd)
             .then( result => {
-                console.log(result);
+
+                const PAYLOAD = {
+                    escritorio,
+                    ticket: ticketUpd.numero
+                };
+
+                SERVER.io.emit( 'atencion-nueva', PAYLOAD );
+                
                 res.json({
                     ok: true,
                     ticket: ticketUpd
