@@ -31,7 +31,7 @@ export default class Server {
 
     private socketsListen() {
 
-        console.log('Escuchando sockets...');
+       // console.log('Escuchando sockets...');
 
         this.io.on('connection', cliente => {
           
@@ -40,7 +40,7 @@ export default class Server {
             socket.desconectar(cliente);
             socket.mensaje(cliente, this.io);
             socket.configurarUsuario(cliente, this.io );
-        })
+        });
 
 
 
